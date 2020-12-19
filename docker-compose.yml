@@ -1,0 +1,64 @@
+version: '3'
+services:
+
+  #PHP Service
+  pynar-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: pynar-rest
+    container_name: pynar-app
+    restart: unless-stopped
+    tty: true
+    environment:
+      SERVICE_NAME: pynar-app
+      SERVICE_TAGS: dev
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - pynar-network
+
+  #Nginx Service
+  pynar-webserver:
+    image: nginx:alpine
+    container_name: pynar-webserver
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - pynar-network
+
+  #MySQL Service
+  pynar-db:
+    image: mysql:8.0
+    container_name: pynar-db
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_ROOT_PASSWORD: pynar_123
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - pynar-data:/var/lib/mysql/
+      - ./mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - pynar-network
+
+#Docker Networks
+networks:
+  pynar-network:
+    driver: bridge
+#Volumes
+volumes:
+  pynar-data:
+    driver: local
