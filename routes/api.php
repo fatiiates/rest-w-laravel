@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\API\UserController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\API\USER\UserController;
+use App\Http\Controllers\API\USER\FileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,10 +15,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('login', [UserController::class, 'login']);
+Route::prefix('user')->group(function () {
+    Route::post('login', [UserController::class, 'login']);
+    Route::post('signup', [UserController::class, 'signup']);
 
-Route::post('register', [UserController::class, 'register']);
+    Route::group(['middleware' => 'auth:api'], function () {
+        Route::post('logout', [UserController::class, 'logout']);
 
-Route::group(['middleware' => 'auth:api'], function () {
-    Route::post('details', [UserController::class, 'details']);
+        Route::prefix('file')->group(function () {
+            Route::post('download', [FileController::class, 'download']);
+            Route::post('upload', [FileController::class, 'upload']);
+            Route::post('uploadedFiles', [FileController::class, 'uploadedFiles']);
+        });
+        
+    });
 });
