@@ -45,7 +45,7 @@ services:
       - "3306:3306"
     environment:
       MYSQL_DATABASE: laravel
-      MYSQL_ROOT_PASSWORD: pynar_123
+      MYSQL_ROOT_PASSWORD: senin_root_sifren
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
     volumes:
