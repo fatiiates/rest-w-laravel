@@ -54,6 +54,18 @@ Uygulama 80 ve 3306 portlarını kullanmaktadır. Bilgisayarınızıda bu portla
 İlk olarak laravelin gerektirdiği paketleri ve composer.lock dosyasını oluşturalım.
 
     docker run --rm -v $(pwd):/app composer install
+    
+Şimdi bir root şifresi ve laraveluser kullanıcısı için bir şifre ayarlamanız gerekiyor. Bunun için proje ana dizininde aşağıdaki komutu kopyalayın.
+
+    cp .env.example .env
+    
+Ardından nano ile '.env' dosyasına girerek 15. satırda bulunan 'DB_PASSWORD' değişkenini kendinize göre belirleyin. Bu şifre laraveluser kullanıcısının veritabanı şifresi olacaktır.
+
+    nano .env
+    
+Şimdi root kullanıcısının şifresini ayarlamak için nano ile 'docker-compose.yml' dosyasının içerisine girin. 48. satırda bulunan 'MYSQL_ROOT_PASSWORD' değişkenini kendinize göre ayarlayın. Bu şifre root kullanıcısının veritabanı şifresi olacaktır.
+
+    nano docker-compose.yml
 
 Aşağıdaki komut ile konteynırlarımızı derleyerek ayağa kaldıralım.
 
@@ -89,7 +101,7 @@ Sonuç şuna benzemelidir.
     +--------------------+
     5 rows in set (0.00 sec)
   
-Eğer ki sonuçlarınız uyuşuyorsa kullanıcı oluşturmaya geçebiliriz. Yeni bir kullanıcı oluşturalım ve 'laravel' veritabanı üzerindeki tüm yetkileri kendisine verelim.
+Eğer ki sonuçlarınız uyuşuyorsa kullanıcı oluşturmaya geçebiliriz. Yeni bir kullanıcı oluşturalım ve 'laravel' veritabanı üzerindeki tüm yetkileri kendisine verelim. Oluşturduğumuz kullanıcının adı ve şifresi '.env' dosyasındaki verileriniz ile uyuşmalıdır.
     
     CREATE USER 'laraveluser'@'%' IDENTIFIED WITH mysql_native_password BY 'sizin_env_içinde_tanımladığınız_şifreniz';
     GRANT ALL ON laravel.* TO 'laraveluser'@'%';
