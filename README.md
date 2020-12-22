@@ -51,9 +51,13 @@ Uygulama 80 ve 3306 portlarını kullanmaktadır. Bilgisayarınızıda bu portla
     sudo apache2ctl stop
     sudo service mysql stop
 
+İlk olarak laravelin gerektirdiği paketleri ve composer.lock dosyasını oluşturalım.
+
+    docker run --rm -v $(pwd):/app composer install
+
 Aşağıdaki komut ile konteynırlarımızı derleyerek ayağa kaldıralım.
 
-    docker-compose -up -d --build
+    docker-compose up -d --build
     
 Daha sonra uygulamamız için yeni bir APP_KEY oluşturalım ve konfigürasyonlarımızı cache.php içerisine aktaralım.
 
